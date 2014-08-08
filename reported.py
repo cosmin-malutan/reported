@@ -43,7 +43,6 @@ locales = {
                   'fr',
                   'it',
                   'ja',
-                  'ja-JP-mac',
                   'pl',
                   'pt-BR',
                   'ru']
@@ -60,7 +59,7 @@ systems = [
     'Mac OS X 10.6.8 x86_64',
     'Mac OS X 10.7.5 x86_64',
     'Mac OS X 10.8.5 x86_64',
-    'Mac OS X 10.9.3 x86_64',
+    'Mac OS X 10.9.4 x86_64',
     'Linux Ubuntu 12.04 x86', 'Linux Ubuntu 12.04 x86_64',
     'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64'
 ]
@@ -79,7 +78,7 @@ payload = {
 expected = {}
 for testrun in testruns:
     expected[testrun] = {}
-    # endurance and update are not localised, onlu en-US for them
+    # endurance and update are not localised, only en-US for them
     # TODO: make DRY
     if testrun in ['update', 'endurance']:
         for branch in branches:
@@ -109,7 +108,7 @@ for testrun in testruns:
         for row in rows:
             item = row['value']
             branch = item['application_version'].split('.')[0]
-            locale = item['locale']
+            locale = item['locale'].replace('ja-JP-mac', 'ja')
             system = '%s %s %s' % (item['system_name'], item['system_version'], item['processor'])
             # print '%s %s %s' %(branch, locale, system)
 
@@ -128,7 +127,7 @@ for testrun in testruns:
 # Write results into a file
 filename = 'results_%s.txt' % date
 f = open(filename, 'w')
-f.write("Missing Reports\n============\n")
+f.write("Missing Reports for %s\n============\n" % date)
 
 # We 'really' care about missing results
 for testrun in sorted(expected):
@@ -146,7 +145,7 @@ for testrun in sorted(expected):
         for locale in sorted(expected[testrun][branch]):
             f.write("%s %s: " % (branch, locale))
             for system in sorted(expected[testrun][branch][locale]):
-                f.write("[%s %s]\n" % (system, expected[testrun][branch][locale][system]))
+                f.write("%s [%s]\n" % (expected[testrun][branch][locale][system], system))
             f.write('\n')
         f.write('\n')
     f.write('\n')
