@@ -55,7 +55,6 @@ locales = {
                   'id',
                   'it',
                   'ja',
-                  'ja-JP-mac',
                   'ko',
                   'lt',
                   'nb-NO',
@@ -107,14 +106,21 @@ payload = {
 expected = {}
 for testrun in testruns:
     expected[testrun] = {}
-    # endurance and update are not localised, only en-US for them
+    # update are not localised, only en-US
+    # endurance is only run against en-US nightly
     # TODO: make DRY
-    if testrun in ['update', 'endurance']:
+    if testrun is 'update':
         for branch in branches:
             expected[testrun][branch] = {}
             expected[testrun][branch]['en-US'] = {}
             for system in systems:
                 expected[testrun][branch]['en-US'][system] = None
+    elif testrun is 'endurance':
+        branch = branches[0]
+        expected[testrun][branch] = {}
+        expected[testrun][branch]['en-US'] = {}
+        for system in systems:
+            expected[testrun][branch]['en-US'][system] = None
     else:
         for branch in branches:
             expected[testrun][branch] = {}
