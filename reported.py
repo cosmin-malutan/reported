@@ -137,8 +137,8 @@ for testrun in testruns:
     # different domains for nightly/aurora vs beta
     for domain in ['daily', 'release']:
         url = url_template.replace('###TESTRUN###', testrun).replace('###DOMAIN###', domain)
-        print 'Fetching data for %s' % url
         r = requests.get(url, params=payload)
+        print 'Fetching data for %s' % r.url
         rows = r.json()['rows']
         for row in rows:
             item = row['value']

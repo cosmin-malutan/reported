@@ -55,13 +55,10 @@ results = {}
 
 # iterate through all testrun types
 for testrun in testruns:
-    if testrun not in results:
-        results[testrun] = {}
-    # different domains for nightly/aurora vs beta
     for domain in ['release']:
         url = url_template.replace('###TESTRUN###', testrun).replace('###DOMAIN###', domain)
-        print 'Fetching data for %s' % url
         r = requests.get(url, params=payload)
+        print 'Fetching data for %s' % r.url
         rows = r.json()['rows']
         for row in rows:
             item = row['value']
@@ -70,56 +67,59 @@ for testrun in testruns:
             if args.branch and branch != args.branch:
                 break
 
-            if branch not in results[testrun]:
-                results[testrun][branch] = {}
+            if branch not in results:
+                results[branch] = {}
+            if testrun not in results[branch]:
+                results[branch][testrun] = {}
 
-            if item['system_name'] not in results[testrun][branch]:
-                results[testrun][branch][item['system_name']] = {}
+            if item['system_name'] not in results[branch][testrun]:
+                results[branch][testrun][item['system_name']] = {}
 
-            if 'tests_passed' not in results[testrun][branch][item['system_name']]:
-                results[testrun][branch][item['system_name']]['tests_passed'] = item['tests_passed']
+            if 'tests_passed' not in results[branch][testrun][item['system_name']]:
+                results[branch][testrun][item['system_name']]['tests_passed'] = item['tests_passed']
             else:
-                results[testrun][branch][item['system_name']]['tests_passed'] += item['tests_passed']
+                results[branch][testrun][item['system_name']]['tests_passed'] += item['tests_passed']
 
-            if 'tests_failed' not in results[testrun][branch][item['system_name']]:
-                results[testrun][branch][item['system_name']]['tests_failed'] = item['tests_failed']
+            if 'tests_failed' not in results[branch][testrun][item['system_name']]:
+                results[branch][testrun][item['system_name']]['tests_failed'] = item['tests_failed']
             else:
-                results[testrun][branch][item['system_name']]['tests_failed'] += item['tests_failed']
+                results[branch][testrun][item['system_name']]['tests_failed'] += item['tests_failed']
 
-            if 'tests_skipped' not in results[testrun][branch][item['system_name']]:
-                results[testrun][branch][item['system_name']]['tests_skipped'] = item['tests_skipped']
+            if 'tests_skipped' not in results[branch][testrun][item['system_name']]:
+                results[branch][testrun][item['system_name']]['tests_skipped'] = item['tests_skipped']
             else:
-                results[testrun][branch][item['system_name']]['tests_skipped'] += item['tests_skipped']
+                results[branch][testrun][item['system_name']]['tests_skipped'] += item['tests_skipped']
 
 # Write results into a file
-filename = 'results_%s.txt' % date
+filename = 'failrate_%s.txt' % date
 f = open(filename, 'w')
-f.write("Failing rate for %s\n============\n" % date)
+f.write("Failure rate for %s\n======================\n" % date)
 
 # We 'really' care about missing results
-for testrun in results:
-    for branch in results[testrun]:
-        f.write("\n\n\n\nTestrun %s, branch %s \n" % (testrun, branch))
+for branch in sorted(results, key=lambda x: x):
+    f.write("\n\nVersion %s\n--------\n" % branch)
+    for testrun in results[branch]:
+        f.write("\ntestrun_%s\n~~~~~~~~" % testrun)
         total_passed = 0
         total_failed = 0
         total_skipped = 0
-        for platform in results[testrun][branch]:
-            f.write("\n          Platform  %s \n" % platform)
-            passed = results[testrun][branch][platform]['tests_passed']
-            failed = results[testrun][branch][platform]['tests_failed']
-            skipped = results[testrun][branch][platform]['tests_skipped']
+        for platform in results[branch][testrun]:
+            f.write("\n%s" % platform.ljust(6))
+            passed = results[branch][testrun][platform]['tests_passed']
+            failed = results[branch][testrun][platform]['tests_failed']
+            skipped = results[branch][testrun][platform]['tests_skipped']
             total = passed + failed + skipped
             total_passed += passed
             total_failed += failed
             total_skipped += skipped
-            f.write("\n               passed  %f \n" % (float(passed) / float(total) * 100))
-            f.write("\n               failed  %f \n" % (float(failed) / float(total) * 100))
-            f.write("\n               skipped  %f \n" % (float(skipped) / float(total) * 100))
+            f.write("passed  %6.2f%% (%d) \n" % ((float(passed) / float(total) * 100), passed))
+            f.write("      failed  %6.2f%% (%d) \n" % ((float(failed) / float(total) * 100), failed))
+            f.write("      skipped %6.2f%% (%d) \n" % ((float(skipped) / float(total) * 100), skipped))
 
         total_total = total_passed + total_failed + total_skipped
-        f.write("\n          Total passed  %f \n" % (float(total_passed) / float(total_total) * 100))
-        f.write("\n          Total failed  %f \n" % (float(total_failed) / float(total_total) * 100))
-        f.write("\n          Total skipped  %f \n" % (float(total_skipped) / float(total_total) * 100))
+        f.write("\nTotal passed  %6.2f%% (%d)\n" % ((float(total_passed) / float(total_total) * 100), total_passed))
+        f.write("      failed  %6.2f%% (%d)\n" % ((float(total_failed) / float(total_total) * 100), total_failed))
+        f.write("      skipped %6.2f%% (%d)\n" % ((float(total_skipped) / float(total_total) * 100), total_skipped))
 
 
 f.close()
