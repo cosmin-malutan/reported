@@ -144,14 +144,10 @@ systems = [
     'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64'
 ]
 
-# If no --date supplied, use today
-date = args.date or datetime.date.today().isoformat()
-enddate = args.enddate or date
-
 # Query arguments for the server call
 payload = {
-  'startkey': '["All","All","All","%sT23:59:59"]' % date,
-  'endkey': '["All","All","All","%sT00:00:00"]' % enddate
+  'startkey': '["All","All","All","%sT23:59:59"]' % args.date,
+  'endkey': '["All","All","All","%sT00:00:00"]' % args.enddate
 }
 
 # Build the expected object, we'll match this against the actual reports
