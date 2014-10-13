@@ -9,6 +9,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--date',
                     default=datetime.date.today().isoformat(),
                     help='Date')
+parser.add_argument('--enddate',
+                    default=datetime.date.today().isoformat(),
+                    help='End Date')
 args = parser.parse_args()
 
 # URL and query query arguments
@@ -24,7 +27,7 @@ testruns = ['functional',
 
 # We only care for Nightly, Aurora and Beta
 # !!! You will need to manually update these after each release !!!
-branches = ['34', '33', '32']
+branches = ['35','34','33']
 
 # Currently run locales
 # Keep them in sync
@@ -36,44 +39,93 @@ locales = {
                   'en-US',
                   'ru',
                   'zh-CN'],
-    branches[2]: ['ar',
-                  'bg',
-                  'cs',
-                  'da',
-                  'de',
-                  'el',
-                  'en-GB',
-                  'en-US',
-                  'es-CL',
-                  'es-ES',
-                  'es-MX',
-                  'fi',
-                  'fr',
-                  'he',
-                  'hr',
-                  'hu',
-                  'id',
-                  'it',
-                  'ja',
-                  'ko',
-                  'lt',
-                  'nb-NO',
-                  'nl',
-                  'pl',
-                  'pt-BR',
-                  'pt-PT',
-                  'ro',
-                  'ru',
-                  'sk',
-                  'sl',
-                  'sr',
-                  'sv-SE',
-                  'th',
-                  'tr',
-                  'uk',
-                  'vi',
-                  'zh-CN',
-                  'zh-TW']
+    branches[2]: ["ach",
+                  "af",
+                  "an",
+                  "ar",
+                  "as",
+                  "ast",
+                  "be",
+                  "bg",
+                  "bn-BD",
+                  "bn-IN",
+                  "br",
+                  "bs",
+                  "ca",
+                  "cs",
+                  "csb",
+                  "cy",
+                  "da",
+                  "de",
+                  "dsb",
+                  "el",
+                  "en-GB",
+                  "en-US",
+                  "en-ZA",
+                  "eo",
+                  "es-AR",
+                  "es-CL",
+                  "es-ES",
+                  "es-MX",
+                  "et",
+                  "eu",
+                  "fi",
+                  "fr",
+                  "fy-NL",
+                  "ga-IE",
+                  "gd",
+                  "gl",
+                  "gu-IN",
+                  "he",
+                  "hi-IN",
+                  "hr",
+                  "hsb",
+                  "hu",
+                  "hy-AM",
+                  "id",
+                  "is",
+                  "it",
+                  "ja-JP-mac",
+                  "kk",
+                  "km",
+                  "kn",
+                  "ko",
+                  "lij",
+                  "lt",
+                  "lv",
+                  "mai",
+                  "mk",
+                  "ml",
+                  "mr",
+                  "ms",
+                  "nb-NO",
+                  "nl",
+                  "nn-NO",
+                  "or",
+                  "pa-IN",
+                  "pl",
+                  "pt-BR",
+                  "pt-PT",
+                  "rm",
+                  "ro",
+                  "ru",
+                  "si",
+                  "sk",
+                  "sl",
+                  "son",
+                  "sq",
+                  "sr",
+                  "sv-SE",
+                  "ta",
+                  "te",
+                  "th",
+                  "tr",
+                  "uk",
+                  "vi",
+                  "xh",
+                  "zh-CN",
+                  "zh-TW",
+                  "zu"]
 }
 
 # All CI machines / architecures should be here
@@ -87,19 +139,19 @@ systems = [
     'Mac OS X 10.6.8 x86_64',
     'Mac OS X 10.7.5 x86_64',
     'Mac OS X 10.8.5 x86_64',
-    'Mac OS X 10.9.4 x86_64',
+    'Mac OS X 10.9.5 x86_64',
     'Linux Ubuntu 12.04 x86', 'Linux Ubuntu 12.04 x86_64',
     'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64'
 ]
 
 # If no --date supplied, use today
 date = args.date or datetime.date.today().isoformat()
+enddate = args.enddate or date
 
 # Query arguments for the server call
 payload = {
   'startkey': '["All","All","All","%sT23:59:59"]' % date,
-  'endkey': '["All","All","All","%sT00:00:00"]' % date,
-  'descending': 'true'
+  'endkey': '["All","All","All","%sT00:00:00"]' % enddate
 }
 
 # Build the expected object, we'll match this against the actual reports
