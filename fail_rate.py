@@ -9,6 +9,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--date',
                     default=datetime.date.today().isoformat(),
                     help='Date')
+parser.add_argument('--enddate',
+                    default=datetime.date.today().isoformat(),
+                    help='End Date')
 parser.add_argument('--branch',
                     default=None,
                     help='Branch')
@@ -47,8 +50,7 @@ date = args.date or datetime.date.today().isoformat()
 # Query arguments for the server call
 payload = {
   'startkey': '["All","All","All","%sT23:59:59"]' % date,
-  'endkey': '["All","All","All","%sT00:00:00"]' % date,
-  'descending': 'true'
+  'endkey': '["All","All","All","%sT00:00:00"]' % args.enddate
 }
 
 results = {}
