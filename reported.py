@@ -27,7 +27,7 @@ testruns = ['functional',
 
 # We only care for Nightly, Aurora and Beta
 # !!! You will need to manually update these after each release !!!
-branches = ['35','34','33']
+branches = ['36','35','34']
 
 # Currently run locales
 # Keep them in sync
@@ -208,9 +208,9 @@ for testrun in testruns:
 # pp.pprint(expected)
 
 # Write results into a file
-filename = 'results_%s.txt' % date
+filename = 'results_%s.txt' % args.date
 f = open(filename, 'w')
-f.write("Missing Reports for %s\n============\n" % date)
+f.write("Missing Reports for %s\n============\n" % args.date)
 
 # We 'really' care about missing results
 for testrun in sorted(expected):
