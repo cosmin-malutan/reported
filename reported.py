@@ -7,10 +7,8 @@ import pprint
 # Arguments, only date atm
 parser = argparse.ArgumentParser()
 parser.add_argument('--date',
-                    default=datetime.date.today().isoformat(),
                     help='Date')
 parser.add_argument('--enddate',
-                    default=datetime.date.today().isoformat(),
                     help='End Date')
 args = parser.parse_args()
 
@@ -143,10 +141,14 @@ systems = [
     'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64'
 ]
 
+# If no --date supplied, use today
+date = args.date or datetime.date.today().isoformat()
+enddate = args.enddate or date
+
 # Query arguments for the server call
 payload = {
-  'startkey': '["All","All","All","%sT23:59:59"]' % args.date,
-  'endkey': '["All","All","All","%sT00:00:00"]' % args.enddate
+  'startkey': '["All","All","All","%sT00:00:00"]' % date,
+  'endkey': '["All","All","All","%sT23:59:59"]' % enddate
 }
 
 # Build the expected object, we'll match this against the actual reports
