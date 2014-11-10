@@ -124,8 +124,7 @@ locales = {
                   "vi",
                   "xh",
                   "zh-CN",
-                  "zh-TW",
-                  "zu"]
+                  "zh-TW"]
 }
 
 # All CI machines / architecures should be here
