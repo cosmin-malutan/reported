@@ -85,7 +85,7 @@ locales = {
                   "id",
                   "is",
                   "it",
-                  "ja-JP-mac",
+                  "ja",
                   "kk",
                   "km",
                   "kn",
