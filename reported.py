@@ -25,7 +25,7 @@ testruns = ['functional',
 
 # We only care for Nightly, Aurora and Beta
 # !!! You will need to manually update these after each release !!!
-branches = ['36','35','34']
+branches = ['37','36','35']
 
 # Currently run locales
 # Keep them in sync
@@ -52,7 +52,6 @@ locales = {
                   "ca",
                   "cs",
                   "csb",
-                  "cy",
                   "da",
                   "de",
                   "dsb",
@@ -137,8 +136,8 @@ systems = [
     'Mac OS X 10.7.5 x86_64',
     'Mac OS X 10.8.5 x86_64',
     'Mac OS X 10.9.5 x86_64',
-    'Linux Ubuntu 12.04 x86', 'Linux Ubuntu 12.04 x86_64',
-    'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64'
+    'Linux Ubuntu 13.10 x86', 'Linux Ubuntu 13.10 x86_64',
+    'Linux Ubuntu 14.04 x86', 'Linux Ubuntu 14.04 x86_64'
 ]
 
 # If no --date supplied, use today
